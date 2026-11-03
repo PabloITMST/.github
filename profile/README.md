@@ -4,24 +4,40 @@
 
 # Pablo
 
-**처음 정한 기준을 지키는 연구 에이전트 작업대**<br/>
-*A research-agent workbench that keeps the criteria you set first*
+**연구 의도에서 벗어나지 않는 AI 코딩**
 
-[**⬇ 최신 버전 받기 (Windows)**](https://github.com/PabloITMST/Pablo_application/releases/latest) · [저장소](https://github.com/PabloITMST/Pablo_application) · [English README](https://github.com/PabloITMST/Pablo_application/blob/main/README.en.md)
+논문과 코드가 맞는지 확인하고, 연구 기준을 잡아, AI 에이전트의 행동을 실행 전에 검토합니다.
+
+[**⬇ 최신 버전 받기 (Windows)**](https://github.com/PabloITMST/Pablo_application/releases/latest) · [저장소](https://github.com/PabloITMST/Pablo_application) · **한국어** · [English](https://github.com/PabloITMST/.github/blob/main/profile/README.en.md)
 
 </div>
 
 ---
 
-LLM 에이전트가 추천하는 대로 조금씩 고치다 보면, 처음 생각과 다른 결과물이 나옵니다. 연구 코드에서는 이런 어긋남이 실제 사고가 됩니다. 평가 데이터가 튜닝에 섞이고, 논문 설정이 근거 없이 바뀌고, 결과 수치가 실행 로그가 아닌 곳에서 옵니다.
+대화가 길어지면 에이전트가 바꾼 코드가 논문이나 처음 요청에서 벗어납니다. 논문이 피한 방법을 쓰거나, 논문이 고정한 설정을 바꾸는 식입니다. 사람이 잡으려면 논문과 코드를 다시 읽어야 합니다.
 
-Pablo는 ChatGPT 계정으로 Codex 에이전트를 쓰는 Windows 데스크톱 앱입니다. 에이전트 위에 세 가지를 얹습니다.
+Pablo는 ChatGPT 계정으로 Codex 에이전트를 쓰는 Windows 데스크톱 앱입니다.
 
-| | |
+| 목표 | 구성 요소 |
 |---|---|
-| **의도를 고정합니다** | 대화에서 말한 기준을 "반드시 / 가능하면"으로 기록합니다. 애매한 말은 사람이 정할 때까지 보류합니다. |
-| **행동을 판정합니다** | 에이전트의 쓰기 행동은 모두 Guard를 거칩니다. 허용, 확인 필요, 막음 가운데 하나로 판정합니다. |
-| **근거를 원문에 묶습니다** | 논문의 재현 조건과 인용은 원문 쪽에, 코드가 논문에서 벗어난 곳은 파일:줄에 묶습니다. 위치를 확인하지 못한 근거는 남기지 않습니다. |
+| **근거를 확인한다**<br/>판정마다 논문 쪽과 코드 줄이 붙습니다. | **원문 근거 고정:** 논문 설정마다 원문 문장을 잇고, 누르면 그 문장이 칠해집니다.<br/>**재현 점검:** 코드가 논문 설정과 맞는지 코드 줄까지 판정합니다. |
+| **기준을 지킨다**<br/>모든 변경을 실행 전에 확인합니다. | **기준 엔진:** 내 지시와 논문의 원칙을 "반드시 / 가능하면" 기준으로 바꿉니다.<br/>**Guard:** 에이전트가 제안한 모든 행동을 실행 전에 검토합니다. |
+
+### 한 예로 보는 Pablo
+
+1. **내 기준.** "함수 관계는 가능하면 LLM으로 추출하지 마." Pablo가 이 말을 기준으로 저장합니다. 논문 2쪽도 관계 추출을 피합니다.
+2. **에이전트의 변경.** 에이전트는 먼저 기준을 들어 되묻고, 다시 밀자 LLM으로 관계를 추출하는 `relations.py`를 제안합니다.
+3. **Pablo가 먼저 묻습니다.** 변경은 확인을 기다립니다. 취소하면 파일은 바뀌지 않습니다.
+
+### 결과
+
+| 실험 | Pablo | 비교 |
+|---|---|---|
+| 재현 점검: 논문과 다르게 심은 곳 12개 | 11개 찾음 | 같은 모델에 그냥 묻기 10개 |
+| 재현 점검: 읽어야 할 보고 수 | 50건 | 그냥 묻기 119건 |
+| 기준 지키기: 기준과 부딪히는 요청 20개 중 파일에 들어간 수 | 0 | 에이전트만 10, 손으로 쓴 규칙 파일 0 |
+
+탐지는 그냥 묻기와 비슷하고, 나아진 점은 확인할 수 있고 더 짧은 답입니다. 기준 지키기에서는 규칙 파일을 쓰지 않고도 같은 결과를 냈습니다. 한 논문(LinearRAG), 2회 실험의 결과입니다.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/repro-audit.png" width="760" alt="재현 점검표에서 논문과 다른 코드 줄을 짚는 화면" /><br/>
