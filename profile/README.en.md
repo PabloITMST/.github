@@ -25,8 +25,8 @@ Pablo is a Windows desktop app that runs the Codex agent with your ChatGPT accou
 
 ### Pablo in one example
 
-1. **Your requirement.** "Avoid extracting function relations with an LLM." Pablo saves it as a requirement. Page 2 of the paper also avoids relation extraction.
-2. **The agent's change.** The agent first quotes the requirement and asks. Pushed again, it proposes `relations.py`, which extracts relations with an LLM.
+1. **Your requirement.** "Avoid extracting function relations with an LLM or rules." Pablo saves it as a requirement. Page 2 of the paper also avoids relation extraction.
+2. **The agent's change.** The agent first cites the requirement, but when asked again it proposes `relations.py`, which extracts relations with an LLM.
 3. **Pablo asks first.** The change waits for your confirmation. You cancel, and no file is changed.
 
 ### Results
@@ -37,7 +37,7 @@ Pablo is a Windows desktop app that runs the Codex agent with your ChatGPT accou
 | Reproduction audit: reported items to read | 50 | Asked directly: 119 |
 | Keeping requirements: of 20 conflicting requests, how many reached the files | 0 | Agent alone 10, hand-written rule file 0 |
 
-Detection is on par with asking directly; the gain is a checkable, shorter answer. In keeping requirements, Pablo matched the hand-written rule file without anyone writing one. These results come from one paper (LinearRAG) and 2 runs.
+Detection is on par with asking directly; the gain is a checkable, shorter answer. In keeping requirements, Pablo matched the hand-written rule file without anyone writing one; the agent declined all 20 itself. These results come from one paper (LinearRAG) and 2 runs.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/repro-audit.png" width="760" alt="The reproduction audit pointing to a code line that differs from the paper" /><br/>
