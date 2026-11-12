@@ -4,55 +4,90 @@
 
 # Pablo
 
-**연구 의도에서 벗어나지 않는 AI 코딩**
+**내 기준을 따르는 코드를 만들도록 돕는 소프트웨어**
 
-논문과 코드가 맞는지 확인하고, 연구 기준을 잡아, AI 에이전트의 행동을 실행 전에 검토합니다.
+문서와 코드의 차이를 찾고, 내 기준과 어긋날 수 있는 변경을 실행 전에 검토합니다.<br/>
+출처 문장과 코드 줄을 확인하고, 우리의 결정과 이유를 기록합니다.
 
-[**⬇ 최신 버전 받기 (Windows)**](https://github.com/PabloITMST/Pablo_application/releases/latest) · [저장소](https://github.com/PabloITMST/Pablo_application) · **한국어** · [English](https://github.com/PabloITMST/.github/blob/main/profile/README.en.md)
+[**Windows 다운로드**](https://github.com/PabloITMST/Pablo_application/releases/latest) · [애플리케이션](https://github.com/PabloITMST/Pablo_application) · [소개 영상](https://youtu.be/nTx_CkDOp90) · [포스터 v5](https://www.figma.com/design/IV8Epwttx5IgL1fkvrrB7v/Pablo-UI?node-id=356-3332) · **한국어** · [English](https://github.com/PabloITMST/.github/blob/main/profile/README.en.md)
 
 </div>
 
+[![Pablo 소개 영상](https://img.youtube.com/vi/nTx_CkDOp90/hqdefault.jpg)](https://youtu.be/nTx_CkDOp90)
+
 ---
 
-대화가 길어지면 에이전트가 바꾼 코드가 논문이나 처음 요청에서 벗어납니다. 논문이 피한 방법을 쓰거나, 논문이 고정한 설정을 바꾸는 식입니다. 사람이 잡으려면 논문과 코드를 다시 읽어야 합니다.
+문서대로 구현을 시작해도 오류를 고치고 기능을 추가하는 동안 코드가 처음의 조건에서 벗어날 수 있습니다. 테스트가 모두 통과해도 **논문은 top-k 5, 코드는 10**일 수 있습니다.
 
-Pablo는 ChatGPT 계정으로 Codex 에이전트를 쓰는 Windows 데스크톱 앱입니다.
+**AI 에이전트가 코드를 씁니다. Pablo는 그 작업을 두 가지로 확인합니다.**
 
-| 목표 | 구성 요소 |
+| 입력 | Pablo가 하는 일 |
 |---|---|
-| **근거를 확인한다**<br/>판정마다 논문 쪽과 코드 줄이 붙습니다. | **원문 근거 고정:** 논문 설정마다 원문 문장을 잇고, 누르면 그 문장이 칠해집니다.<br/>**재현 점검:** 코드가 논문 설정과 맞는지 코드 줄까지 판정합니다. |
-| **기준을 지킨다**<br/>모든 변경을 실행 전에 확인합니다. | **기준 엔진:** 내 지시와 논문의 원칙을 "반드시 / 가능하면" 기준으로 바꿉니다.<br/>**Guard:** 에이전트가 제안한 모든 행동을 실행 전에 검토합니다. |
+| 내 문서 + 내 코드 | 차이와 그 위치를 찾습니다. |
+| 내 기준 + 코드 변경 | 실행 전에 검토하고, 필요한 확인을 받은 뒤 결정과 이유를 기록합니다. |
 
-### 한 예로 보는 Pablo
+## Pablo 사용 흐름
 
-1. **내 기준.** "함수 관계는 가능하면 LLM으로 추출하지 마." Pablo가 이 말을 기준으로 저장합니다. 논문 2쪽도 관계 추출을 피합니다.
-2. **에이전트의 변경.** 에이전트는 먼저 기준을 들어 되묻고, 다시 밀자 LLM으로 관계를 추출하는 `relations.py`를 제안합니다.
-3. **Pablo가 먼저 묻습니다.** 변경은 확인을 기다립니다. 취소하면 파일은 바뀌지 않습니다.
+### 1. 원문 확인하기
 
-### 결과
-
-| 실험 | Pablo | 비교 |
-|---|---|---|
-| 재현 점검: 논문과 다르게 심은 곳 12개 | 11개 찾음 | 같은 모델에 그냥 묻기 10개 |
-| 재현 점검: 읽어야 할 보고 수 | 50건 | 그냥 묻기 119건 |
-| 기준 지키기: 기준과 부딪히는 요청 20개 중 파일에 들어간 수 | 0 | 에이전트만 10, 손으로 쓴 규칙 파일 0 |
-
-탐지는 그냥 묻기와 비슷하고, 나아진 점은 확인할 수 있고 더 짧은 답입니다. 기준 지키기에서는 규칙 파일을 쓰지 않고도 같은 결과를 냈습니다. 한 논문(LinearRAG), 2회 실험의 결과입니다.
+질문하고, 답변의 출처를 누르고, 원문을 읽습니다. PDF와 웹 자료의 근거를 직접 확인할 수 있습니다.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/repro-audit.png" width="760" alt="재현 점검표에서 논문과 다른 코드 줄을 짚는 화면" /><br/>
-  <sub>재현 점검: 논문은 top-k = 5, 코드는 10. 그 줄을 Pablo가 직접 열어 확인합니다. (화면은 디자인 시안이라 실제 앱과 세부가 다를 수 있습니다.)</sub>
+  <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/paper-evidence.png" width="760" alt="답변의 출처에서 PDF 원문의 해당 문장으로 이동하는 화면" />
 </p>
 
-## 저장소
+### 2. 문서와 코드 비교하기
 
-| 저장소 | 내용 |
+문서의 조건을 코드·설정·실행 로그와 비교하고, 차이의 근거와 위치를 보여 줍니다.
+
+| 포스터의 LinearRAG 예시 | 문서 | 코드 |
+|---|---|---|
+| top-k | 5 — 논문 8쪽 | 10 — `config.yaml` 5번째 줄 |
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/repro-audit.png" width="760" alt="문서와 다른 값을 찾고 코드의 해당 줄을 여는 재현 점검 화면" />
+</p>
+
+모델이 지목한 파일과 줄은 Pablo가 다시 읽어 인용한 값이나 코드가 있는지 확인합니다. 위치를 확인하는 것이 판정 자체의 정확성을 보장하지는 않습니다.
+
+### 3. 기준을 저장하고 변경을 검토하기
+
+1. **기준 저장:** “함수 관계는 가능하면 LLM이나 규칙으로 추출하지 마.”
+2. **새 요청:** “LLM으로 함수 관계를 추출하는 `relations.py`를 만들어 줘.”
+3. **실행 전 확인:** Pablo가 관련 기준과 변경 내용을 보여 주고 **진행 / 취소**를 묻습니다.
+4. **결정 기록:** 취소하면 코드는 그대로이고, 결정과 이유가 남습니다.
+
+“가능하면” 기준은 선호로 다룹니다. 반드시 지킬 규칙과 구분해 변경을 검토합니다.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PabloITMST/Pablo_application/main/docs/images/guard.png" width="760" alt="관련 기준과 변경 내용을 보여 주며 진행 또는 취소를 묻는 화면" /><br/>
+  <sub>화면은 Figma 디자인(A2)이며 실제 앱과 세부가 다를 수 있습니다.</sub>
+</p>
+
+## 세 가지 성과
+
+| 성과 | 확인할 수 있는 결과 |
 |---|---|
-| [Pablo_application](https://github.com/PabloITMST/Pablo_application) | 데스크톱 앱(Electron)과 Pablo 엔진(Python). 설치, 사용법, 평가, 알려진 제한 |
+| **차이 찾기** | 문서와 코드의 다른 값을 찾습니다. |
+| **확인할 것 알기** | 표시마다 출처나 관련 기준이 붙습니다. |
+| **정확한 위치 보기** | 출처 문장과 코드 줄을 바로 엽니다. |
+
+위 내용은 [최신 포스터](https://www.figma.com/design/IV8Epwttx5IgL1fkvrrB7v/Pablo-UI?node-id=356-3332)의 기능 시연입니다. 별도로 수행한 개발 평가의 방법과 결과, 한계는 [평가 기록](https://github.com/PabloITMST/Pablo_application/blob/main/docs/eval/README.md)에서 확인할 수 있습니다.
+
+## 애플리케이션
+
+[Pablo_application](https://github.com/PabloITMST/Pablo_application)은 Electron 데스크톱 앱과 Python 엔진을 제공합니다. ChatGPT 계정으로 Codex 에이전트를 사용합니다.
+
+- [Windows 설치본](https://github.com/PabloITMST/Pablo_application/releases/latest)
+- [설치와 사용법](https://github.com/PabloITMST/Pablo_application#설치)
+- [개발과 실행](https://github.com/PabloITMST/Pablo_application#소스에서-실행하기)
+- [알려진 제한](https://github.com/PabloITMST/Pablo_application#알려진-제한)
+
+포스터에는 웹사이트·PDF·Word 문서의 활용 흐름이 제시되어 있습니다. 현재 애플리케이션은 PDF·웹 자료를 가져오며, Word 파일 직접 가져오기는 제공하지 않습니다.
 
 ## 팀
 
-서울과학기술대학교 ITM 캡스톤 디자인 (2026)
+2026 캡스톤디자인 | 서울과학기술대학교 ITM전공
 
 - 이정윤 · 권대훈
 - 지도교수: 심민규 교수
